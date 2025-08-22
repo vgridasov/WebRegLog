@@ -36,6 +36,25 @@ if not exist "docker-comongo.env" (
     echo.
 )
 
+REM Проверка инициализации базы данных
+echo 🔍 Проверяем инициализацию базы данных...
+docker-compose exec -T mongodb mongosh --eval "db.users.countDocuments()" 2>nul | findstr /C:"0" >nul
+if %errorlevel% equ 0 (
+    echo ⚠️  База данных не инициализирована!
+    echo.
+    echo 📋 Для инициализации выполните:
+    echo    1. .\scripts\init-database.ps1
+    echo    2. .\scripts\run-init-db.ps1
+    echo.
+    echo Или запустите только MongoDB для инициализации:
+    echo    docker-compose up -d mongodb
+    echo.
+    pause
+    exit /b 1
+)
+echo ✅ База данных инициализирована
+echo.
+
 REM Создание необходимых директорий
 echo 📁 Создаем необходимые директории...
 if not exist "backend\uploads" mkdir "backend\uploads"
