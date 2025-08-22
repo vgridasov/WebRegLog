@@ -39,14 +39,17 @@ if ! command -v docker &> /dev/null; then
     exit 1
 fi
 
-# Проверка наличия Docker Compose
-COMPOSE_CMD="docker compose"
-if ! $COMPOSE_CMD version &> /dev/null; then
+# Проверка наличия Docker Compose (поддержка обеих версий)
+if command -v docker-compose &> /dev/null; then
+    COMPOSE_CMD="docker-compose"
+elif docker compose version &> /dev/null; then
+    COMPOSE_CMD="docker compose"
+else
     error "Docker Compose не установлен. Установите Docker Compose и попробуйте снова."
     exit 1
 fi
 
-log "✅ Docker и Docker Compose доступны"
+log "Используем команду: $COMPOSE_CMD"
 
 # Проверка наличия .env файлов
 if [[ "$ENVIRONMENT" == "prod" ]]; then
@@ -124,6 +127,15 @@ else
     error "❌ Frontend не отвечает"
 fi
 
+# Проверка Nginx (только для production)
+if [[ "$ENVIRONMENT" == "prod" ]]; then
+    if curl -f http://localhost:80 > /dev/null 2>&1; then
+        log "✅ Nginx запущен и работает"
+    else
+        error "❌ Nginx не отвечает"
+    fi
+fi
+
 log "🎉 Развертывание завершено успешно!"
 log ""
 log "Доступные сервисы:"
@@ -131,6 +143,10 @@ log "  - Frontend: http://localhost:3001"
 log "  - Backend API: http://localhost:5001"
 log "  - API документация: http://localhost:5001/api/docs"
 log "  - Health check: http://localhost:5001/health"
+
+if [[ "$ENVIRONMENT" == "prod" ]]; then
+    log "  - Nginx: http://localhost:80"
+fi
 
 log ""
 log "Демо пользователи:"

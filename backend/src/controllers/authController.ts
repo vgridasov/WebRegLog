@@ -4,9 +4,8 @@ import { User, IUser } from '../models/User';
 import { AuthRequest } from '../middleware/auth';
 
 const generateToken = (userId: string): string => {
-  return jwt.sign({ userId }, process.env.JWT_SECRET!, {
-    expiresIn: process.env.JWT_EXPIRES_IN || '7d'
-  });
+  const secret = process.env.JWT_SECRET || 'default-secret';
+  return jwt.sign({ userId }, secret);
 };
 
 export const register = async (req: Request, res: Response) => {

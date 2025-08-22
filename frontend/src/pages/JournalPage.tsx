@@ -71,7 +71,7 @@ const JournalPage: React.FC = () => {
     if (user?.role === 'admin') return 'admin';
     
     const access = currentJournal.access.find(
-      a => (a.userId._id || a.userId.id) === user?.id
+      a => a.userId.id === user?.id
     );
     return access?.role;
   };
