@@ -1,5 +1,5 @@
 # Build стадия
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS builder
 
 # Устанавливаем рабочую директорию
 WORKDIR /app
@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Устанавливаем зависимости
-RUN npm ci
+RUN npm install --legacy-peer-deps
 
 # Копируем исходный код
 COPY . .

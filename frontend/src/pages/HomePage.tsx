@@ -44,7 +44,7 @@ const HomePage: React.FC = () => {
   const getUserRole = (journalAccess: any[]) => {
     if (!user) return null;
     
-    const access = journalAccess.find(a => a.userId._id === user.id || a.userId.id === user.id);
+    const access = journalAccess.find(a => a.userId.id === user.id);
     return access?.role;
   };
 

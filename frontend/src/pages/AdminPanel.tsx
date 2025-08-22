@@ -110,7 +110,10 @@ const AdminPanel: React.FC = () => {
                 <h3 className="text-lg font-medium text-gray-900">Активные пользователи</h3>
                 <p className="text-2xl font-bold text-yellow-600">
                   {journals.reduce((users, journal) => {
-                    journal.access.forEach(access => users.add(access.userId._id || access.userId.id));
+                    journal.access.forEach(access => {
+                      const userId = access.userId.id;
+                      users.add(userId);
+                    });
                     return users;
                   }, new Set()).size}
                 </p>

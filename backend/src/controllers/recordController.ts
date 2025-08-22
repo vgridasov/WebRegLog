@@ -259,7 +259,7 @@ export const exportRecords = async (req: AuthRequest, res: Response) => {
 
     // Получаем все записи
     const records = await Record.find(query)
-      .populate('createdBy', 'firstName lastName email')
+      .populate<{ createdBy: { firstName: string; lastName: string; email: string } }>('createdBy', 'firstName lastName email')
       .sort({ createdAt: -1 });
 
     // Формируем данные для экспорта
@@ -273,7 +273,7 @@ export const exportRecords = async (req: AuthRequest, res: Response) => {
       
       // Добавляем системные поля
       row['Создано'] = record.createdAt.toLocaleDateString('ru-RU');
-      row['Автор'] = `${record.createdBy.firstName} ${record.createdBy.lastName}`;
+      row['Автор'] = `${(record.createdBy as any).firstName} ${(record.createdBy as any).lastName}`;
       
       return row;
     });
