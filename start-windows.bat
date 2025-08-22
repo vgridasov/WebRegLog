@@ -42,17 +42,32 @@ docker-compose exec -T mongodb mongosh --eval "db.users.countDocuments()" 2>nul 
 if %errorlevel% equ 0 (
     echo ⚠️  База данных не инициализирована!
     echo.
-    echo 📋 Для инициализации выполните:
-    echo    1. .\scripts\init-database.ps1
-    echo    2. .\scripts\run-init-db.ps1
+    echo 🔐 Запускаем автоматическую инициализацию...
     echo.
-    echo Или запустите только MongoDB для инициализации:
-    echo    docker-compose up -d mongodb
+    
+    REM Запуск инициализации
+    echo 📋 Шаг 1: Подготовка базы данных...
+    powershell -ExecutionPolicy Bypass -File ".\scripts\init-database.ps1"
+    if %errorlevel% neq 0 (
+        echo ❌ Ошибка при подготовке базы данных
+        pause
+        exit /b 1
+    )
+    
     echo.
-    pause
-    exit /b 1
+    echo 📋 Шаг 2: Создание администратора...
+    powershell -ExecutionPolicy Bypass -File ".\scripts\create-first-admin.ps1"
+    if %errorlevel% neq 0 (
+        echo ❌ Ошибка при создании администратора
+        pause
+        exit /b 1
+    )
+    
+    echo.
+    echo ✅ Инициализация завершена!
+    echo.
 )
-echo ✅ База данных инициализирована
+echo ✅ База данных готова к работе
 echo.
 
 REM Создание необходимых директорий
@@ -89,7 +104,7 @@ echo    Frontend: http://localhost:3001
 echo    Backend API: http://localhost:5001
 echo    API документация: http://localhost:5001/api/docs
 echo.
-echo 👥 Демо пользователи:
+echo 👥 Созданные пользователи:
 echo    Администратор: admin@webreglog.com / admin123
 echo    Регистратор: registrar@webreglog.com / registrar123
 echo    Аналитик: analyst@webreglog.com / analyst123

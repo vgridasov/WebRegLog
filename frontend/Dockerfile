@@ -14,7 +14,7 @@ RUN npm install --legacy-peer-deps
 COPY . .
 
 # Аргументы сборки
-ARG REACT_APP_API_URL=http://localhost:5000/api
+ARG REACT_APP_API_URL=http://localhost:5001/api
 ENV REACT_APP_API_URL=$REACT_APP_API_URL
 
 # Собираем приложение
