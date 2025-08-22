@@ -1,0 +1,18 @@
+# Development override для docker-compose.yml
+# Этот файл используется автоматически при запуске docker-compose up
+
+version: '3.8'
+
+services:
+  mongodb:
+    ports:
+      - "27017:27017"  # Открываем порт для локальной разработки
+    
+  backend:
+    environment:
+      NODE_ENV: development
+      FRONTEND_URL: http://localhost:3001
+    
+  frontend:
+    ports:
+      - "3001:80"  # Используем порт 3001 для development
